@@ -1,49 +1,92 @@
+// made by following this tutorial: https://www.youtube.com/watch?v=sjYxRlwHvsM&t=6s
+
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+  import {ref, computed, Ref, registerRuntimeCompiler} from 'vue'
+  const player = ref('X')
+  const board: Ref<string[][]> = ref([
+    ['', '', ''],
+    ['', '', ''],
+    ['', '', ''],
+  ])
+
+  // Taken from a react tutorial: https://react.dev/learn/tutorial-tic-tac-toe
+  function calculateWinner(squares: string[]) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
+
+// .flat() is used to turn it into a one dimmensional array, easier to check lines that way
+const winner = computed(() => calculateWinner(board.value.flat()))
+
+// x and y are the indeces of the square that's chosen
+const makeMove = (x: number, y: number): string | undefined => {
+  // if we have a winner
+  if(winner.value) return
+
+  // if a marker is already placed
+  if (board.value[x][y] !== '') return
+
+  board.value[x][y] = player.value
+
+  // swap the player value
+  player.value = player.value === 'X' ? 'O' : 'X'
+}
+
+const resetGame = () => {
+  board.value = [
+    ['', '', ''],
+    ['', '', ''],
+    ['', '', ''],
+  ]
+  player.value = 'X'
+}
+
 </script>
 
 <template>
-  <div>
-    <a href="https://www.electronjs.org/" target="_blank">
-      <img src="./assets/electron.svg" class="logo electron" alt="Electron logo" />
-    </a>
-    <a href="https://vitejs.dev/" target="_blank">
-      <img src="./assets/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Electron + Vite + Vue" />
-  <div class="flex-center">
-    Place static files into the <code>/public</code> folder
-    <img style="width: 2.4em; margin-left: .4em;" src="/logo.svg" alt="Logo">
-  </div>
+  <main class="pt-8 text-center dark:bg-gray-800 min-h-screen dark:text-white">
+    <h1 class="text-5xl mb-8 text-3x1 font-bold uppercase">Tic Tac Toe</h1>
+
+    <h3 class="text-xl mb-4">Player {{player}}'s Turn</h3>
+
+    <div class="flex flex-col items-center mb-8">
+      <div
+        v-for="(row, x) in board"
+        :key="x"
+        class="flex">
+
+        <div
+          v-for="(cell, y) in row"
+          :key="y"
+          @click="makeMove(x, y)"
+          :class="`border border-white w-20 h-20 hover:bg-gray-900 flex items-center justify-center text-4xl cursor-pointer ${ cell === 'X' ? 'text-pink-400' : 'text-blue-400' }`">
+          {{ cell === 'X' ? 'X' : cell === 'O' ? 'O' : '' }}
+
+        </div>
+
+      </div>
+      <h2 v-if="winner !== null" class="text-6xl font-bold mb-8 mt-8">Player '{{winner}}' wins!</h2>
+
+      <button @click="resetGame" class="my-4 px-4 py-2 bg-pink-500 rounded uppercase font-bold hover:bg-pink-600 duration-300 cursor-pointer">Reset Game</button>
+    </div>
+  </main>
 </template>
 
 <style>
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-
-.logo.electron:hover {
-  filter: drop-shadow(0 0 2em #9FEAF9);
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
 </style>
