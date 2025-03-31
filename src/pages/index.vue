@@ -1,11 +1,8 @@
 <script setup lang="ts">
   import { BrowserWindow } from 'electron';
-  import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
   const router = useRouter()
-
-  let mainWindow;
-
 
 </script>
 
@@ -17,7 +14,7 @@
 
     <div class="flex justify-center gap-4">
       <RouterLink
-        to="/v/ai"
+        to="v/ai"
         class="bg-blue-500 text-white px-6 py-3 rounded-lg font-bold"
       >
         Play with AI
@@ -26,14 +23,10 @@
         class="bg-green-500 text-white px-6 py-3 rounded-lg font-bold cursor-pointer"
         @click="router.push('/v/human')"
       >
-        Play with Human
+        Play with a Human
       </button>
     </div>
 
    
   </main>
 </template>
-
-<style>
-
-</style>
