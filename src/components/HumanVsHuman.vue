@@ -33,6 +33,11 @@
 // .flat() is used to turn it into a one dimmensional array, easier to check lines that way
 const winner = computed(() => calculateWinner(board.value.flat()))
 
+const isDraw = computed(() => {
+  // if there are no more moves left
+  return board.value.flat().every((cell) => cell !== '') && !winner.value
+})
+
 // x and y are the indeces of the square that's chosen
 const makeMove = (x: number, y: number): string | undefined => {
   // if we have a winner
@@ -81,6 +86,7 @@ const resetGame = () => {
 
       </div>
       <h2 v-if="winner !== null" class="text-6xl font-bold mb-8 mt-8">Player '{{winner}}' wins!</h2>
+      <h2 v-if="isDraw === true" class="text-6xl font-bold mb-8 mt-8">Draw Game!</h2>
 
       <button @click="resetGame" class="text-3xl my-4 px-4 py-2 bg-pink-500 rounded uppercase font-bold hover:bg-pink-600 duration-300 cursor-pointer">Reset Game</button>
     </div>
