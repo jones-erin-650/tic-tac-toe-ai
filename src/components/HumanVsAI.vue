@@ -30,6 +30,66 @@
   return null;
 }
 
+// Min-max algorithm to make a move for the AI
+function minimax(board: string[], depth: number, isMaximizing: boolean): number {
+  const winner = calculateWinner(board);
+  //Check if the game is over and who the winner is.
+    //If the winner is 'X', return a negative score while adding the number of moves(depth) such that quicker wins are rewarded more.
+  if (winner === 'X') return -10 + depth;
+    //If the winner is 'O', return a positive score while subtracting the number of moves(depth) such that quicker wins are rewarded more.
+  if (winner === 'O') return 10 - depth;
+  if (!board.includes('')) return 0; // Draw
+
+  if (isMaximizing) {
+    let bestScore = -Infinity;
+    // Check every possible move for creating minmax tree
+    for (let i = 0; i < board.length; i++) {
+      if (board[i] === '') {
+        board[i] = 'O';
+        // Calculate best score for other player
+        const score = minimax(board, depth + 1, false);
+        // Reset the board
+        board[i] = '';
+        // Track best score/move
+        bestScore = Math.max(score, bestScore);
+      }
+    }
+    return bestScore;
+  } else {
+    let bestScore = Infinity;
+    for (let i = 0; i < board.length; i++) {
+      if (board[i] === '') {
+        board[i] = 'X';
+        // Calculate best score for the AI
+        const score = minimax(board, depth + 1, true);
+        board[i] = '';
+        // Track best score/move
+        bestScore = Math.min(score, bestScore);
+      }
+    }
+    return bestScore;
+  }
+}
+
+const getBestMove = (): { x: number; y: number } | null => {
+  let bestScore = -Infinity
+  let move: { x: number; y: number } | null = null
+
+  const flatBoard = board.value.flat();
+    for (let i = 0; i < flatBoard.length; i++) {
+      if(flatBoard[i] === '') {
+        flatBoard[i] = 'O'
+        const score = minimax(flatBoard, 0, false);
+        flatBoard[i] = ''
+        if (score > bestScore) {
+          bestScore = score
+          move = { x: Math.floor(i / 3), y: i % 3 }
+        }
+      }
+    }
+    return move
+}
+
 // .flat() is used to turn it into a one dimmensional array, easier to check lines that way
 const winner = computed(() => calculateWinner(board.value.flat()))
 
@@ -41,10 +101,23 @@ const makeMove = (x: number, y: number): string | undefined => {
   // if a marker is already placed
   if (board.value[x][y] !== '') return
 
+  // the marker of Player X is placed
   board.value[x][y] = player.value
 
-  // swap the player value
-  player.value = player.value === 'X' ? 'O' : 'X'
+  // If Player X is the winner, return
+  if (winner.value) return
+
+  // AI's turn
+  player.value = 'O'
+
+  if(player.value === 'O') {
+    const bestMove = getBestMove()
+    if(bestMove) {
+      board.value[bestMove.x][bestMove.y] = player.value
+      //Swap the player value
+      player.value = 'X'
+    }
+  }
 }
 
 const resetGame = () => {
@@ -73,8 +146,8 @@ const resetGame = () => {
         <div
           v-for="(cell, y) in row"
           :key="y"
-          @click="makeMove(x, y)"
-          :class="`border border-white w-40 h-40 hover:bg-gray-900 flex items-center justify-center text-6xl cursor-pointer ${ cell === 'X' ? 'text-pink-400' : 'text-blue-400' }`">
+          :class="`border border-white w-40 h-40 hover:bg-gray-900 flex items-center justify-center text-6xl cursor-pointer ${ cell === 'X' ? 'text-pink-400' : 'text-blue-400' }`"
+          @click="player === 'X' ? makeMove(x, y) : null">      
           {{ cell === 'X' ? 'X' : cell === 'O' ? 'O' : '' }}
 
         </div>
