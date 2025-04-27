@@ -5,16 +5,13 @@ import NavBar from './components/NavBar.vue';
 </script>
 
 <template>
-  <nav>
-    <RouterLink to ="/human">Play Against Human</RouterLink>
-    <RouterLink to ="/ai">Play Against an AI Opponent</RouterLink>
-    <RouterLink to ="/cpu">Watch Two AIs Play</RouterLink>
-  </nav>
-
-  <NavBar />
   
-  <main>
+  <main class="text-center dark:bg-gray-800 min-h-screen dark:text-white">
+    <NavBar />
+
+
     <RouterView />
+
   </main>
   
 </template>

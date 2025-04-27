@@ -141,7 +141,7 @@ const resetGame = () => {
 
 <template>
   <main class="pt-8 text-center dark:bg-gray-800 min-h-screen dark:text-white">
-    <h1 class="text-7xl font-bold uppercase">Tic Tac Toe</h1>
+    <h1 class="text-7xl font-bold uppercase">Human Vs AI</h1>
 
     <h3 class="text-4xl my-4">Player {{player}}'s Turn</h3>
 

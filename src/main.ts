@@ -14,7 +14,6 @@ import './demos/ipc'
 // import './demos/node'
 
 const routes = [
-  { path: '/', component: App },
   { path: '/human', component: HumanVsHuman },
   { path: '/ai', component: HumanVsAI },
   { path: '/cpu', component: AIVsAI },
