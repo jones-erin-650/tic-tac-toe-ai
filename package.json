@@ -40,6 +40,8 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.0.15",
     "electron-vue-vite": "file:",
-    "tailwindcss": "^4.0.15"
+    "router": "^2.2.0",
+    "tailwindcss": "^4.0.15",
+    "vue-router": "^4.5.1"
   }
 }
