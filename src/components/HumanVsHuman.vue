@@ -35,7 +35,7 @@ const winner = computed(() => calculateWinner(board.value.flat()))
 
 const isDraw = computed(() => {
   // if there are no more moves left
-  return board.value.flat().every((cell) => cell !== '') && !winner.value
+  return board.value.flat().every((cell: string) => cell !== '') && !winner.value
 })
 
 // x and y are the indeces of the square that's chosen
